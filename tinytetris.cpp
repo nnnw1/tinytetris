@@ -91,9 +91,46 @@ void remove_line() {
             continue;
         }
         for(int i = row-1; i > 0; --i) {
-            memcpy(&board[i+1][0], &board[i][0], 40);
+            memcpy(&board[i+1][0], &board[i][0], 40);  //if full, cover the line with the line above it
         }
-        memset(&board[0][0], 0, 10);
+        memset(&board[0][0], 0, 10);    //remove the top line
         score++;
     }
+}
+
+/*
+@func   check if placing piece at (x,y,r) will be a collision
+*/
+int check_hit(int x, int y, int r) {
+    if(y + NUM(r, 18) > 19) {     //the bottom of piece is out of the screen
+        return 1;
+    }
+    set_piece(px, py, pr, 0);
+    c = 0;
+    for(int i=0; i < 8; i += 2) {
+        board[y + NUM(r, i * 2)][x + NUM(r, (i * 2) +2)] && c++; //if the places of piece are occupied by other pieces
+    }
+    set_piece(px, py, pr, p + 1);   //still in the previous place
+    return c;  //c == 0 meaning can be placed
+}
+
+/*
+@func   falling speed of piece
+*/
+int do_tick() {
+    if(++tick > 30) {
+        tick = 0;
+        if(check_hit(x, y+1, r)) {
+            if(!y) {       //can't be in the next line
+                return 0;
+            }
+            remove_line();
+            new_piece();
+        }
+        else {             //can be in the next line
+            y++;
+            update_piece();
+        }
+    }
+    return 1;
 }
