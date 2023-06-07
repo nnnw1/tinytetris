@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+//block layout
 int x = 431424,      //x coordinate of piece
     y = 598356,      //y coordinate of piece
     r = 427089,      //the form of piece (rotation)
@@ -22,3 +23,20 @@ int x = 431424,      //x coordinate of piece
                    {px, py, px, py},
                    {614928, 399424, 615744, 428369}},
     score = 0;
+
+/*
+@param x     the form of piece
+@param y     the bit
+return       extract a 2-bit number from a block entry
+*/
+int NUM(int x, int y) { return 3 & block[p][x] >> y; }
+
+/*
+create a new piece
+*/
+void new_piece() {
+    y = py = 0;
+    p = rand() % 7;
+    r = pr = rand() % 4;
+    x = px = rand() % (10 - NUM(r, 16));
+}
