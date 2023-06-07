@@ -32,7 +32,7 @@ return       extract a 2-bit number from a block entry
 int NUM(int x, int y) { return 3 & block[p][x] >> y; }
 
 /*
-create a new piece
+@func   create a new piece
 */
 void new_piece() {
     y = py = 0;
@@ -42,7 +42,7 @@ void new_piece() {
 }
 
 /*
-retrieve through board, draw the board and score 
+@func   retrieve through board, draw the board and score 
 */
 void frame() {
     for(int i=0; i < 20; ++i) {
@@ -63,10 +63,37 @@ void frame() {
 @param y     y coordinate
 @param r     the form of piece
 @param v     the color, 0 means to wipe the piece
-set the value of the board for a particular (x,y,r) piece
+@func   set the value of the board for a particular (x,y,r) piece
 */
 void set_piece(int x, int y, int r, int v) {
     for(int i=0; i < 8; i += 2) {
         board[NUM(r, i * 2) + y][NUM(r, (i * 2) + 2) + x] = v;
+    }
+}
+
+/*
+@func   move a piece from old coords to new
+*/
+int update_piece() {
+    set_piece(px, py, pr, 0);
+    set_piece(px = x, py = y, pr = r, p + 1);
+}
+/*
+@func   if a line is full, then remove the line and update the score
+*/
+void remove_line() {
+    for(int row = y; row <= y + NUM(r, 18); ++row) {
+        c = 1;
+        for(int i=0; i < 10; ++i) {
+            c *= board[row][i];
+        }
+        if(!c) {
+            continue;
+        }
+        for(int i = row-1; i > 0; --i) {
+            memcpy(&board[i+1][0], &board[i][0], 40);
+        }
+        memset(&board[0][0], 0, 10);
+        score++;
     }
 }
