@@ -134,3 +134,41 @@ int do_tick() {
     }
     return 1;
 }
+
+/*
+@func main game loop with wasd input checking
+*/
+void runloop() {
+    while(do_tick()) {
+        usleep(10000);
+        if((c = getch()) == 'a' && x > 0 && !check_hit(x - 1, y, r )) {
+            x--;
+        }
+        if(c == 'd' && x + NUM(r, 16) < 9 && !check_hit(x + 1, y, r)) {
+            x++;
+        }
+        if(c == 's') {
+            while(!check_hit(x, y + 1, r)) {   //keep falling until collision
+                y++;
+                update_piece();
+            }
+            remove_line();
+            new_piece();
+        }
+        if(c == 'w') {
+            ++r %= 4;
+            while(x +NUM(r, 16) > 9) {    //x is out of the boundary
+                x--;
+            }
+            if(check_hit(x, y, r)) {     //can't rotation because of collision, then same coordinates  
+                x = px;
+                r = pr;
+            }
+        }
+        if(c == 'q') {
+            return;
+        }
+        update_piece();
+        frame();
+    }
+}
