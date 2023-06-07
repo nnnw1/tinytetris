@@ -172,3 +172,23 @@ void runloop() {
         frame();
     }
 }
+
+/*
+@func main function
+*/
+int main() {
+    srand(time(0));                //init random seed
+    initscr();                     //enter curses mode
+    start_color();                 //init color
+    for(int i=1; i < 8; ++i) {     //colors indexed by their position in the block
+        init_pair(i, i, 0);        //seven color pairs
+    }
+    new_piece();    
+    resizeterm(22, 22);            //set window size
+    noecho();
+    timeout(0);
+    curs_set(0);                   //no cursor display
+    box(stdscr, 0, 0);             //draw boundary
+    runloop();
+    endwin();                      //exit curses mode
+}
