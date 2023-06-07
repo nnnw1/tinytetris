@@ -40,3 +40,33 @@ void new_piece() {
     r = pr = rand() % 4;
     x = px = rand() % (10 - NUM(r, 16));
 }
+
+/*
+retrieve through board, draw the board and score 
+*/
+void frame() {
+    for(int i=0; i < 20; ++i) {
+        move(1 + i, 1);
+        for(int j=0; j < 10; ++j) {
+            board[i][j] && attron(262176 | board[i][j] << 8);
+            printw("  ");
+            attroff(262176 | board[i][j] << 8);
+        }
+    }
+    move(21, 1);
+    printw("Score: %d", score);
+    refresh();
+}
+
+/*
+@param x     x coordinate
+@param y     y coordinate
+@param r     the form of piece
+@param v     the color, 0 means to wipe the piece
+set the value of the board for a particular (x,y,r) piece
+*/
+void set_piece(int x, int y, int r, int v) {
+    for(int i=0; i < 8; i += 2) {
+        board[NUM(r, i * 2) + y][NUM(r, (i * 2) + 2) + x] = v;
+    }
+}
